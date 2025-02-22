@@ -24,10 +24,10 @@ import iotpubsub
 client = iotpubsub.MQTTClient(client_id='test_client', broker_ip=<broker IP address>, broker_port=1883)
 ```
 
-If you want to use password-based authentication, you can add a password for a client with `mosquitto_passwd -c /mosquitto/config/.passwords <client name>`, where *client name* is unique to a client that'll be connecting to the broker.  If the broker is in a container, you'll need to attach it with `docker exec -it mosquitto sh` before executing the command.  You'll now see the client and a hash of the password in */mosquitto/config/. passwords*.  
-Change `allow_anonymous true` to `false` and uncomment `#password_file /mosquitto/config/.passwords` in `/mosquitto/config/mosquitto.conf` and restart the service or container to enable password-based authentication.
+If you want to use password-based authentication, you can add a password for a user with `mosquitto_passwd -c /mosquitto/config/.passwords <username>`, where *username* is the name of a person or service (that's unique to the broker) that'll be connecting to the broker.  If the broker is in a container, you'll need to attach it with `docker exec -it mosquitto sh` before executing the command.  You'll now see the username and a hash of their password in */mosquitto/config/. passwords*.  
+Change `allow_anonymous true` to `false` and uncomment `#password_file /mosquitto/config/.passwords` in `/mosquitto/config/mosquitto.conf` and restart the service or container to enable password-based authentication.  Try connecting with the code below.  If you attempt to connect without using the correct username/password combination you'll see a `Client test_client disconnected, not authorised.` in the broker's log.
 ```python
 from iotpubsub import MQTTClient
 client = MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883, username=<username>, password=<password>)
 ```
-If you attempt to connect without using the correct username/password combination you'll see a `Client test_client disconnected, not authorised.` in the broker's log.
+Use `mosquitto_passwd -b /mosquitto/config/.passwords <username>` to add users and `mosquitto_passwd -D /mosquitto/config/.passwords <username>` to remove them.  If the broker is in a container, issue `kill -HUP <process id of mosquitto>` to restart the broker after adding and/or removing users.
