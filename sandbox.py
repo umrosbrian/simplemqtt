@@ -86,9 +86,8 @@ client.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # try MQTTClient
 # ----------------------------------------------------------------------------------------------------------------------
-from pydb import logging_to_console
+import iotpubsub
 from datetime import datetime as dt
-logging_to_console()
 
 def cb(message):
     """test of callback within on_message_callback"""
