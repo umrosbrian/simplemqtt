@@ -9,12 +9,13 @@ from random import randint
 import paho.mqtt.client as mqtt
 from logging import getLogger
 from socket import timeout, gethostname
+from .utils import ClassNameAttribute
 import ssl
 
 LOGGER = getLogger(__name__)
 
 
-class MQTTClient(pyutils.ArgCheck, mqtt.Client):
+class MQTTClient(mqtt.Client):
     """Connect to a MQTT broker and publish to multiple topics along with subscribing to multiple topics
     simultaneously."""
     def __init__(self,
@@ -41,7 +42,7 @@ class MQTTClient(pyutils.ArgCheck, mqtt.Client):
         if client_id is None:
             client_id = f"{gethostname()}-{randint(0,100)}"
         super(MQTTClient, self).__init__(client_id=client_id, callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
-        self.logger = pyutils.ClassNameAttribute(logger=LOGGER, class_name=self.__class__.__name__)
+        self.logger = ClassNameAttribute(logger=LOGGER, class_name=self.__class__.__name__)
         self.client_id = client_id
         self.broker_ip = broker_ip
         self.broker_port = broker_port

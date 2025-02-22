@@ -117,3 +117,6 @@ mqttc_pub = MQTTClient(client_id='mswa0354_pub',
 mqttc_pub.publish(topic="paho/test/topic", message='hello world')
 mqttc_pub.loop_stop()
 mqttc_pub.disconnect()
+# ----------------------------------------------------------------------------------------------------------------------
+# test connection without using any credentials
+# ----------------------------------------------------------------------------------------------------------------------
