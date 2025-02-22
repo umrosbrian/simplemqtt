@@ -1,0 +1,12 @@
+services:
+    mosquitto:
+        build: .
+        image: mosquitto_2.0.20
+        container_name: mosquitto
+        volumes:
+            - .:/mosquitto/config
+            - .:/mosquitto/data
+            - .:/mosquitto/log
+        network_mode: "host"
+        environment:
+            - TZ=America/Detroit
