@@ -120,3 +120,11 @@ mqttc_pub.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # test connection without using any credentials
 # ----------------------------------------------------------------------------------------------------------------------
+import iotpubsub
+client = iotpubsub.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883)
+# ----------------------------------------------------------------------------------------------------------------------
+# test connection without using any credentials
+# ----------------------------------------------------------------------------------------------------------------------
+import iotpubsub
+client = iotpubsub.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883, username='test_client', password='foo')
+client.disconnect()

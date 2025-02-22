@@ -62,7 +62,7 @@ class MQTTClient(mqtt.Client):
 #
 #        self.tls_insecure_set(False)  # Ensure this is False for security
 
-        # self.username_pw_set(self.username, self.__login_password)
+        self.username_pw_set(self._username, self._password)
         self.logger.debug("sending CONNECT")
         try:
             self.connect()
