@@ -174,7 +174,7 @@ paho_client.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/
 paho_client.connect(host='192.168.1.103', port=8883)
 paho_client.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
-# pub and sub with the same object
+# pub and sub with the same object...works
 # ----------------------------------------------------------------------------------------------------------------------
 import iotpubsub
 from datetime import datetime as dt
@@ -188,7 +188,4 @@ client.disconnect()
 def on_message(client, userdata, message):
     print(f"{dt.now().strftime('%Y-%m-%d %H:%M:%S')} - topic: {message.topic}, payload: {message.payload.decode()}")
 
-client = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 client.subscribe(topic='pub', callback=on_message)
-client.loop_stop()
-client.disconnect()
