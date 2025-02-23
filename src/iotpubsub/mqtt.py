@@ -50,9 +50,9 @@ class MQTTClient(mqtt.Client):
             self._username = username
             self._password = password
         else:
-            self.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/chain.crt",
-                         certfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.crt",
-                         keyfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.key",
+            self.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/scripts/client_certs/chain.crt",
+                         certfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/scripts/client_certs/client.crt",
+                         keyfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/scripts/client_certs/client.key",
                          tls_version=2)  # for version 1.2
 
             # Ensure this is False for security.  Shouldn't be needed but here for redundancy.

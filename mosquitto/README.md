@@ -1,4 +1,4 @@
-# server certs
+# Certificate Authorities
 
 - `openssl genpkey -algorithm RSA -out rootCA.key -pkeyopt rsa_keygen_bits:4096` to make the root CA's private key
 - `openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -out rootCA.crt -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Example University/OU=IT/CN=Root CA"` to make the root CA's certificate
@@ -16,6 +16,9 @@ keyUsage = critical, digitalSignature, cRLSign, keyCertSign
 ```
 - `openssl x509 -req -in intermediateCA.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out intermediateCA.crt -days 1825 -sha256 -extfile first.conf -extensions v3_ca` to sign the CSR by the root CA to make a certificate for the intermediate CA
   - use `openssl x509 -text -noout -in intermediateCA.crt | grep -e Issuer -e Subject | grep -v -e Public -e Key` to show that the intermediate CA's cert was issued by the root CA.  I.e. the Issuer is the same as the root CA's Subject.  The CN (Common Name) of the intermediate CA's cert Issuer is the same as the root CA's cert Subject.
+
+# server certs
+
 - `openssl genpkey -algorithm RSA -out server.key -pkeyopt rsa_keygen_bits:2048` to make a private key for the server
 - `openssl req -new -key server.key -out server.csr -subj "/C=US/ST=Michigan/L=Ann Arbor/O=Example University/OU=IT/CN=rdlu0037.ddns.med.umich.edu"` to make a CSR for the server.  You can use simply the hostname for the CN value.
 - `vim second.conf` and paste:
