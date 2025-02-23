@@ -16,7 +16,9 @@ The *mosquitto/docker-compose.yml* file along with the *mosquitto/mosquitto.conf
 `docker-compose up --detach` to build the image.  Notice that after the image has been built, ownership of this copied mosquitto directory will hve recursively been changed to user *1883*, which is the *mosquitto* user' UID.  If the build fails or the container doesn't start, use `docker-compose ps mosquitto` to view the build log, make a fix (you'll need sudo 
 to edit files since they're no longer owned by you) and execute *rebuild_image.sh* (don't forget to make this an executable file first) to have another go at building the image and running the container.  After building an image, it'll be running if everything was successful.  Use `docker ps` to verify the status.
 
-### additional setup
+### authentication
+
+#### password-based
 
 At this point, you have a broker that'll accept any client on its port 1883 without any kind of authentication of the client.  We can use the MQTTClient class to verify this if desired.  Use `sudo tail -F log/mosquitto.log` to keep an eye on the broker's log then use the commands below to connect to the broker.  In the log, you'll see `2025-02-22-12:04:27: Sending PINGRESP to test_client` to indicate that the broker is allowing the client's connection.
 ```python
@@ -31,3 +33,23 @@ from iotpubsub import MQTTClient
 client = MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883, username=<username>, password=<password>)
 ```
 Use `mosquitto_passwd -b /mosquitto/config/.passwords <username>` to add users and `mosquitto_passwd -D /mosquitto/config/.passwords <username>` to remove them.  If the broker is in a container, issue `kill -HUP <process id of mosquitto>` to restart the broker after adding and/or removing users.
+
+#### certificate based
+
+X.509 certificates may be used to authenticate the client and broker to one another.  When used they also encrypt payloads from publisher to broker and from broker to subscriber.  When the directive `require_certificate true` is in the .conf file, a client needs to present its certificate to the broker, which then verifies it against the certificate of the CA defined in the `cafile` option.
+
+This will make both CA certificate and a key for the CA.
+```shell
+ openssl req -nodes -x509 -newkey rsa:4096 -keyout my-ca-key.pem -out my-ca.crt -days 356
+
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:Michigan
+Locality Name (eg, city) []:Ann Arbor
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Example University
+Organizational Unit Name (eg, section) []:IT
+Common Name (e.g. server FQDN or YOUR name) []:Root CA
+Email Address []:rosbrian@umich.edu
+```
+
+Make a CSR for the client.  The CN=demo-client sets the Common Name.  This CN will be used as the username in the directive `use_identity_as_username true` in the .conf

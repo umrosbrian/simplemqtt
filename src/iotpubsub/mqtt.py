@@ -49,18 +49,14 @@ class MQTTClient(mqtt.Client):
         if username is not None and password is not None:
             self._username = username
             self._password = password
-#        else:
-#            # config TLS
-#
-#                           certfile="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/client.crt",
-#                           keyfile="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/client.key",
-#                           tls_version=ssl.PROTOCOL_TLSv1_2)
-#        self.tls_set(ca_certs="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/ca-root.crt",
-#                     certfile="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/4711.crt",
-#                     keyfile="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/4711.key",
-#                     tls_version=ssl.PROTOCOL_TLSv1_2)
-#
-#        self.tls_insecure_set(False)  # Ensure this is False for security
+        else:
+            self.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/chain.crt",
+                         certfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.crt",
+                         keyfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.key",
+                         tls_version=2)  # for version 1.2
+
+            # Ensure this is False for security.  Shouldn't be needed but here for redundancy.
+            self.tls_insecure_set(False)
 
         self.username_pw_set(self._username, self._password)
         self.logger.debug("sending CONNECT")
@@ -71,6 +67,7 @@ class MQTTClient(mqtt.Client):
         except ConnectionRefusedError:
             LOGGER.exception("looks like is the broker is down")
 
+        # Overriding the base class methods (on the left) with more verbose method names (on the right).
         self.on_connect = self.on_connect_callback
         self.on_publish = self.on_publish_callback
         self.on_subscribe = self.on_subscribe_callback
@@ -166,6 +163,7 @@ class MQTTClient(mqtt.Client):
         """This is my own implementation ofpaho.mqtt.subscribe.callback.  Provide a callback to take place of
         self.on_message_callback."""
         assert callable(callback) is True, 'call needs to be a function'
+        self.on_message = callback
         self._userdata['subscribe'][topic] = {'callback': callback,
                                                'docstring': callback.__doc__,
                                                'qos': qos}
