@@ -1,4 +1,4 @@
-import iotpubsub
+import simplemqtt
 
 # ----------------------------------------------------------------------------------------------------------------------
 # test tls
@@ -86,7 +86,7 @@ client.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # try MQTTClient
 # ----------------------------------------------------------------------------------------------------------------------
-import iotpubsub
+import simplemqtt
 from datetime import datetime as dt
 
 def cb(message):
@@ -120,41 +120,41 @@ mqttc_pub.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # test connection without using any credentials
 # ----------------------------------------------------------------------------------------------------------------------
-import iotpubsub
-client = iotpubsub.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883)
+import simplemqtt
+client = simplemqtt.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883)
 # ----------------------------------------------------------------------------------------------------------------------
 # test connection without using any credentials
 # ----------------------------------------------------------------------------------------------------------------------
-import iotpubsub
-iotpubsub.enable_logging()
-client_pwd = iotpubsub.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883,
+import simplemqtt
+simplemqtt.enable_logging()
+client_pwd = simplemqtt.MQTTClient(client_id='test_client', broker_ip='192.168.1.103', broker_port=1883,
                               username='foobar', password='bar')
 client_pwd.disconnect()
 
 # ----------------------------------------------------------------------------------------------------------------------
 # try TLS authentication and encryption
 # ----------------------------------------------------------------------------------------------------------------------
-import iotpubsub
+import simplemqtt
 from datetime import datetime as dt
-iotpubsub.enable_logging()
-pub = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
+simplemqtt.enable_logging()
+pub = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 pub.publish(topic='pub', message='from pub')
 pub.loop_stop()
 pub.disconnect()
 
-pub2 = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
+pub2 = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 pub2.publish(topic='pub', message='from pub2')
 pub2.disconnect()
 
 def on_message(client, userdata, message):
     print(f"{dt.now().strftime('%Y-%m-%d %H:%M:%S')} - topic: {message.topic}, payload: {message.payload.decode()}")
     
-sub = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
+sub = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 sub.subscribe(topic='pub', callback=on_message)
 sub.loop_stop()
 sub.disconnect()
 
-sub2 = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
+sub2 = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 sub2.subscribe(topic='pub', callback=on_message)
 sub2.loop_stop()
 sub2.disconnect()
@@ -167,20 +167,20 @@ paho_client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 # client.tls_set(ca_certs="/Volumes/Shared3/Surg-MAG/users/rosbrian/mosq/chain.crt")
 # I've found that a client can connect without any credentials, but can't do anything.  Maybe try adding
 # 'allow_anonymous true' in the 8883 block of the .conf.
-paho_client.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/chain.crt",
-             certfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.crt",
-             keyfile="/home/rosbrian/PycharmProjects/wood_furnace_local/iotpubsub/mosquitto/certs/client.key",
+paho_client.tls_set(ca_certs="/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/certs/chain.crt",
+             certfile="/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/certs/client.crt",
+             keyfile="/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/certs/client.key",
              tls_version = 2)
 paho_client.connect(host='192.168.1.103', port=8883)
 paho_client.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # pub and sub with the same object...works
 # ----------------------------------------------------------------------------------------------------------------------
-import simple-mqtt
+import simplemqtt
 from datetime import datetime as dt
 
-iotpubsub.enable_logging()
-client = iotpubsub.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
+simplemqtt.enable_logging()
+client = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
 client.publish(topic='pub', message='from pub')
 client.loop_stop()
 client.disconnect()
