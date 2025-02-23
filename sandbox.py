@@ -176,7 +176,7 @@ paho_client.disconnect()
 # ----------------------------------------------------------------------------------------------------------------------
 # pub and sub with the same object...works
 # ----------------------------------------------------------------------------------------------------------------------
-import iotpubsub
+import simple-mqtt
 from datetime import datetime as dt
 
 iotpubsub.enable_logging()
