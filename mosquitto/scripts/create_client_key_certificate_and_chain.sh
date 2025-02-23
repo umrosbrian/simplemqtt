@@ -27,4 +27,5 @@ openssl req -new -key "${client_certs_dir}"/client.key -out "${client_certs_dir}
 echo "using the signing CA to sign the client's CSR to create a certificate for the client"
 openssl x509 -req -in "${client_certs_dir}"/client.csr -CA ../certs/signingCA.crt -CAkey ../certs/signingCA.key \
 -CAcreateserial -out "${client_certs_dir}"/client.crt -days 825 -sha256
+rm "${client_certs_dir}"/client.csr
 
