@@ -180,12 +180,23 @@ import simplemqtt
 from datetime import datetime as dt
 
 simplemqtt.enable_logging()
-client = simplemqtt.MQTTClient(broker_ip='192.168.1.103', broker_port=8883)
-client.publish(topic='pub', message='from pub')
+client = simplemqtt.MQTTClient(broker_ip='192.168.1.103',
+                               broker_port=8883,
+                               cert_chain='/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/scripts/client_certs/chain.crt',
+                               cert='/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/scripts/client_certs/client.crt',
+                               key='/home/rosbrian/PycharmProjects/wood_furnace_local/simplemqtt/mosquitto/scripts/client_certs/client.key')
+pw_client = simplemqtt.MQTTClient(broker_ip='192.168.1.103',
+                               broker_port=1883,
+                               username='foo',
+                               password='foobar',
+                               client_id='test_client')
+
+client.publish(topic='test/pub', message='from pub')
 client.loop_stop()
 client.disconnect()
 
 def on_message(client, userdata, message):
     print(f"{dt.now().strftime('%Y-%m-%d %H:%M:%S')} - topic: {message.topic}, payload: {message.payload.decode()}")
 
-client.subscribe(topic='pub', callback=on_message)
+pw_client.subscribe(topic='test/#', callback=on_message)
+pw_client.disconnect()
