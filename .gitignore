@@ -5,3 +5,4 @@ src/simplemqtt.egg-info
 *\.key
 *\.srl
 *.\csr
+mosquitto/scripts/client_certs
