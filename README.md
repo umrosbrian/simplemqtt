@@ -49,7 +49,7 @@ code below shows how to use them with the MQTTClient class.
 ```python
 import simplemqtt
 client = simplemqtt.MQTTClient(broker_ip=<broker IP address>,
-                              broker_port=1883,
+                              broker_port=8883,
                               cert_chain=<path to chain.crt>,
                               cert=<path to client.crt>,
                               key=<path to client.key>)

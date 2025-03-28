@@ -200,3 +200,33 @@ def on_message(client, userdata, message):
 
 pw_client.subscribe(topic='test/#', callback=on_message)
 pw_client.disconnect()
+
+# ----------------------------------------------------------------------------------------------------------------------
+# keep last n seconds of temps in a deque
+# ----------------------------------------------------------------------------------------------------------------------
+from collections import deque
+import simplemqtt
+from datetime import datetime as dt
+
+simplemqtt.enable_logging()
+temp_samples = deque(maxlen=10)
+pw_client = simplemqtt.MQTTClient(broker_ip='192.168.1.103',
+                                  broker_port=1883,
+                                  username='foo',
+                                  password='foobar',
+                                  client_id='test_client')
+def on_message(client, userdata, message):
+    global temp_samples
+    temp_samples.append(float(message.payload.decode()))
+
+pw_client.subscribe(topic='temp', callback=on_message)
+
+def get_temp(shared_object: deque):
+    """Get the average value."""
+    avg = sum(shared_object) / len(shared_object)
+    print(f"average F: {avg}")
+
+get_temp(temp_samples)
+pw_client.disconnect()
+
+
